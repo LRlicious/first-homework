@@ -12,6 +12,7 @@ const string k_key_word[32] = {
 	"sizeof","stastic","struct","switch","typedef","union","unsigned","void","volatile","while"
 };
 queue <int> case_num;	//case数量
+int case_num_turn=0;
 int switch_num = 0;		//switch数量
 
 
@@ -27,6 +28,14 @@ int SearchKeyword(string text, int keyword_num) {
 		if (flag >= 0) {
 			//cout << text << endl;
 			keyword_num++;
+			if (k_key_word[i] == "switch") {
+				case_num.push(case_num_turn);
+				case_num_turn = 0;
+				switch_num++;
+			}
+			else if (k_key_word[i] == "case") {
+				case_num_turn++;
+			}
 			break;
 		}
 	}
@@ -46,5 +55,21 @@ int main() {
 	while (read >> text) {
 		keyword_num = SearchKeyword(text, keyword_num);
 	}
+	case_num.push(case_num_turn);
+	case_num_turn = 0;
 	cout << "total num : " << keyword_num << endl;
+	if (search_level > 1) {
+		cout << "switch num: " << switch_num << endl;
+		cout << "case num:";
+		int i;
+		while (!case_num.empty()) {
+			i = case_num.front();
+			case_num.pop();
+			if (i == 0) {
+				continue;
+			}
+			cout << " " << i;
+		}
+		cout << endl;
+	}
 }
